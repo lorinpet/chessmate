@@ -117,7 +117,7 @@ app.post('/register', async (req, res) => {
       html: `
         <p>Hello ${username},</p>
         <p>Thank you for registering with ChessMate. Please confirm your email address by clicking the link below:</p>
-        <a href="http://${ip}/confirm?token=${token}">Confirm Email</a>
+        <a href="https://${ip}/confirm?token=${token}">Confirm Email</a>
         <p>If you did not register for ChessMate, please ignore this email.</p>
       `
     };
@@ -1598,10 +1598,10 @@ wss.on('connection', (ws, req) => {
       game.initStockfish();
 
       if (game.players['black'].ws) {
-        blackPlayer.ws.send(JSON.stringify({ type: 'setWhiteUser', whiteName: 'Stockfish', whiteImage: 'http://' + ip + '/uploads/sf.png', whiteRating: levelToElo[game.aiDifficulty] }));
+        blackPlayer.ws.send(JSON.stringify({ type: 'setWhiteUser', whiteName: 'Stockfish', whiteImage: 'https://' + ip + '/uploads/sf.png', whiteRating: levelToElo[game.aiDifficulty] }));
         game.stockfish.stdin.write(`go movetime 1000\n`);
       } else {
-        whitePlayer.ws.send(JSON.stringify({ type: 'setBlackUser', blackName: 'Stockfish', blackImage: 'http://' + ip + '/uploads/sf.png', blackRating: levelToElo[game.aiDifficulty] }));
+        whitePlayer.ws.send(JSON.stringify({ type: 'setBlackUser', blackName: 'Stockfish', blackImage: 'https://' + ip + '/uploads/sf.png', blackRating: levelToElo[game.aiDifficulty] }));
       }
     }
   }
@@ -1661,5 +1661,5 @@ function generateGameId() {
 }
 
 server.listen(8080, () => {
-  console.log('Server is listening on port 8080');
+  console.log('Server is listening');
 });
