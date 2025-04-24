@@ -21,7 +21,6 @@ const { spawn } = require('child_process');
 require('dotenv').config();
 
 app.use(cors());
-app.options('*', cors());
 app.use(bodyParser.json());
 app.use(express.json());
 
@@ -443,112 +442,110 @@ app.get('/analyse', async (req, res) => {
 
 app.post('/create', (req, res) => {
   const { position, type, timeControl, gameMode, difficulty } = req.body;
-  res.status(400).json("test");
-  return;
-  // const rawPos = position.trim().split(' ')[0];
-  // let modifiedPos = '';
-  // let x = 0;
-  // let y = 0;
-  // let whiteKing = false;
-  // let blackKing = false;
+  const rawPos = position.trim().split(' ')[0];
+  let modifiedPos = '';
+  let x = 0;
+  let y = 0;
+  let whiteKing = false;
+  let blackKing = false;
 
-  // for (let char of rawPos) {
-  //   if (x < 8) {
-  //     if (whiteKeys.includes(char) || blackKeys.includes(char)) {
-  //       x++;
-  //       modifiedPos += char;
+  for (let char of rawPos) {
+    if (x < 8) {
+      if (whiteKeys.includes(char) || blackKeys.includes(char)) {
+        x++;
+        modifiedPos += char;
 
-  //       if (char === 'k') {
-  //         if (blackKing) {
-  //           res.status(400).json('1');
-  //           return;
-  //         } else {
-  //           blackKing = true;
-  //         }
-  //       } else if (char === 'K') {
-  //         if (whiteKing) {
-  //           res.status(400).json('1');
-  //           return;
-  //         } else {
-  //           whiteKing = true;
-  //         }
-  //       }
-  //     } else if (['1', '2', '3', '4', '5', '6', '7', '8'].includes(char)) {
-  //       const curr = x;
-  //       x += char;
-  //       modifiedPos += (x < 9 ? char : (8 - curr));
-  //     }
-  //   }
+        if (char === 'k') {
+          if (blackKing) {
+            res.status(400).json('1');
+            return;
+          } else {
+            blackKing = true;
+          }
+        } else if (char === 'K') {
+          if (whiteKing) {
+            res.status(400).json('1');
+            return;
+          } else {
+            whiteKing = true;
+          }
+        }
+      } else if (['1', '2', '3', '4', '5', '6', '7', '8'].includes(char)) {
+        const curr = x;
+        x += char;
+        modifiedPos += (x < 9 ? char : (8 - curr));
+      }
+    }
 
-  //   if (char === '/') {
-  //     modifiedPos += char;
-  //     x = 0;
-  //     y++;
+    if (char === '/') {
+      modifiedPos += char;
+      x = 0;
+      y++;
 
-  //     if (y > 7) {
-  //       break;
-  //     }
-  //   }
-  // }
+      if (y > 7) {
+        break;
+      }
+    }
+  }
 
-  // if (!whiteKing || !blackKing) {
-  //   res.status(400).json('1');
-  //   return;
-  // }
+  if (!whiteKing || !blackKing) {
+    res.status(400).json('1');
+    return;
+  }
 
-  // if (x < 8) {
-  //   modifiedPos += (8 - x);
-  //   x = 8;
-  // }
+  if (x < 8) {
+    modifiedPos += (8 - x);
+    x = 8;
+  }
 
-  // while (y < 7) {
-  //   if (modifiedPos.length > 0 && modifiedPos[modifiedPos.length - 1] !== '/') {
-  //     modifiedPos += '/';
-  //   }
+  while (y < 7) {
+    if (modifiedPos.length > 0 && modifiedPos[modifiedPos.length - 1] !== '/') {
+      modifiedPos += '/';
+    }
 
-  //   modifiedPos += '8';
-  //   y++;
-  // }
+    modifiedPos += '8';
+    y++;
+  }
 
-  // const rows = modifiedPos.split('/');
+  const rows = modifiedPos.split('/');
 
-  // if (rows[0].includes('p') || rows[0].includes('P') || rows[7].includes('p') || rows[7].includes('P')) {
-  //   res.status(400).json('1');
-  //   return;
-  // }
+  if (rows[0].includes('p') || rows[0].includes('P') || rows[7].includes('p') || rows[7].includes('P')) {
+    res.status(400).json('1');
+    return;
+  }
 
-  // const timeout = setTimeout(() => {
-  //   res.status(400).json('1');
-  // }, 2000);
+  const timeout = setTimeout(() => {
+    res.status(400).json('1');
+  }, 2000);
 
-  // const sf = spawn('./stockfish');
+  const sf = spawn('./stockfish');
 
-  // sf.stdin.write('uci\n');
-  // sf.stdin.write(`position fen ${modifiedPos} w - - 0 1\n`);
+  sf.stdin.write('uci\n');
+  sf.stdin.write(`position fen ${modifiedPos} w - - 0 1\n`);
 
-  // sf.stdout.on('data', (data) => {
-  //   const msg = data.toString();
+  sf.stdout.on('data', (data) => {
+    const msg = data.toString();
 
-  //   if (msg.includes('bestmove (none)')) {
-  //     sf.stdin.write('quit\n');
-  //     clearTimeout(timeout);
-  //     res.status(400).json('1');
-  //   } else if (msg.includes('bestmove')) {
-  //     sf.stdin.write('quit\n');
+    if (msg.includes('bestmove (none)')) {
+      sf.stdin.write('quit\n');
+      clearTimeout(timeout);
+      res.status(400).json('1');
+    } else if (msg.includes('bestmove')) {
+      sf.stdin.write('quit\n');
       const [minutes, increment] = timeControl.split('+').map(Number);
       const gameId = generateGameId();
       activeGames[gameId] = new ChessGame(type, minutes * 60, increment, gameMode, difficulty);
 
-  //     if (modifiedPos !== 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR') {
-  //       activeGames[gameId].setPosition(modifiedPos);
-  //     }
+      if (modifiedPos !== 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR') {
+        activeGames[gameId].setPosition(modifiedPos);
+      }
       
-  //     clearTimeout(timeout);
+      clearTimeout(timeout);
       res.json(gameId);
-  //   }
-  // });
+    }
+  });
 
-  // sf.stdin.write(`go depth 2\n`);
+  sf.stdin.write(`go depth 2\n`);
 });
 
 app.get('/fetch', async (req, res) => {
