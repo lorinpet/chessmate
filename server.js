@@ -442,77 +442,77 @@ app.get('/analyse', async (req, res) => {
 
 app.post('/create', (req, res) => {
   const { position, type, timeControl, gameMode, difficulty } = req.body;
-  const rawPos = position.trim().split(' ')[0];
-  let modifiedPos = '';
-  let x = 0;
-  let y = 0;
-  let whiteKing = false;
-  let blackKing = false;
+  // const rawPos = position.trim().split(' ')[0];
+  // let modifiedPos = '';
+  // let x = 0;
+  // let y = 0;
+  // let whiteKing = false;
+  // let blackKing = false;
 
-  for (let char of rawPos) {
-    if (x < 8) {
-      if (whiteKeys.includes(char) || blackKeys.includes(char)) {
-        x++;
-        modifiedPos += char;
+  // for (let char of rawPos) {
+  //   if (x < 8) {
+  //     if (whiteKeys.includes(char) || blackKeys.includes(char)) {
+  //       x++;
+  //       modifiedPos += char;
 
-        if (char === 'k') {
-          if (blackKing) {
-            res.status(400).json('1');
-            return;
-          } else {
-            blackKing = true;
-          }
-        } else if (char === 'K') {
-          if (whiteKing) {
-            res.status(400).json('1');
-            return;
-          } else {
-            whiteKing = true;
-          }
-        }
-      } else if (['1', '2', '3', '4', '5', '6', '7', '8'].includes(char)) {
-        const curr = x;
-        x += char;
-        modifiedPos += (x < 9 ? char : (8 - curr));
-      }
-    }
+  //       if (char === 'k') {
+  //         if (blackKing) {
+  //           res.status(400).json('1');
+  //           return;
+  //         } else {
+  //           blackKing = true;
+  //         }
+  //       } else if (char === 'K') {
+  //         if (whiteKing) {
+  //           res.status(400).json('1');
+  //           return;
+  //         } else {
+  //           whiteKing = true;
+  //         }
+  //       }
+  //     } else if (['1', '2', '3', '4', '5', '6', '7', '8'].includes(char)) {
+  //       const curr = x;
+  //       x += char;
+  //       modifiedPos += (x < 9 ? char : (8 - curr));
+  //     }
+  //   }
 
-    if (char === '/') {
-      modifiedPos += char;
-      x = 0;
-      y++;
+  //   if (char === '/') {
+  //     modifiedPos += char;
+  //     x = 0;
+  //     y++;
 
-      if (y > 7) {
-        break;
-      }
-    }
-  }
+  //     if (y > 7) {
+  //       break;
+  //     }
+  //   }
+  // }
 
-  if (!whiteKing || !blackKing) {
-    res.status(400).json('1');
-    return;
-  }
+  // if (!whiteKing || !blackKing) {
+  //   res.status(400).json('1');
+  //   return;
+  // }
 
-  if (x < 8) {
-    modifiedPos += (8 - x);
-    x = 8;
-  }
+  // if (x < 8) {
+  //   modifiedPos += (8 - x);
+  //   x = 8;
+  // }
 
-  while (y < 7) {
-    if (modifiedPos.length > 0 && modifiedPos[modifiedPos.length - 1] !== '/') {
-      modifiedPos += '/';
-    }
+  // while (y < 7) {
+  //   if (modifiedPos.length > 0 && modifiedPos[modifiedPos.length - 1] !== '/') {
+  //     modifiedPos += '/';
+  //   }
 
-    modifiedPos += '8';
-    y++;
-  }
+  //   modifiedPos += '8';
+  //   y++;
+  // }
 
-  const rows = modifiedPos.split('/');
+  // const rows = modifiedPos.split('/');
 
-  if (rows[0].includes('p') || rows[0].includes('P') || rows[7].includes('p') || rows[7].includes('P')) {
-    res.status(400).json('1');
-    return;
-  }
+  // if (rows[0].includes('p') || rows[0].includes('P') || rows[7].includes('p') || rows[7].includes('P')) {
+  //   res.status(400).json('1');
+  //   return;
+  // }
 
   // const timeout = setTimeout(() => {
   //   res.status(400).json('1');
