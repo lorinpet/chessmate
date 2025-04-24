@@ -20,9 +20,9 @@ const { spawn } = require('child_process');
 
 require('dotenv').config();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(cors());
 
 PASSWORD = process.env.PASSWORD;
 JWT_REGISTRATION_SECRET = crypto.randomBytes(32).toString('hex');
