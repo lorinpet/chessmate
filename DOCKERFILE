@@ -4,7 +4,10 @@ WORKDIR /app
 
 COPY . .
 
+RUN ls -l /app
+RUN file /app/stockfish
 RUN chmod +x /app/stockfish
+RUN ls -l /app
 
 RUN npm install
 
