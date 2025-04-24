@@ -421,7 +421,7 @@ app.get('/archives', async (req, res) => {
 
 app.get('/analyse', async (req, res) => {
   const { fen, moves } = req.query;
-  const sf = spawn('/app/stockfish', []);
+  const sf = spawn('./stockfish');
   let analysis;
   
   sf.stdin.write('uci\n');
@@ -518,7 +518,7 @@ app.post('/create', (req, res) => {
     res.status(400).json('1');
   }, 2000);
 
-  const sf = spawn('/app/stockfish', []);
+  const sf = spawn('./stockfish');
 
   sf.stdin.write('uci\n');
   sf.stdin.write(`position fen ${modifiedPos} w - - 0 1\n`);
@@ -666,7 +666,7 @@ class ChessGame {
   }
 
   initStockfish() {
-    this.stockfish = spawn('/app/stockfish', []);
+    this.stockfish = spawn('./stockfish');
     this.stockfish.stdin.write('uci\n');
     this.stockfish.stdin.write('setoption name Skill Level value ' + this.aiDifficulty + '\n');
     this.stockfish.stdin.write(`position fen ${this.startPosition}\n`);
