@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN chmod +x stockfish
+RUN chmod +x /app/stockfish
 
 RUN npm install
 
