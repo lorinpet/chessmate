@@ -1,0 +1,5 @@
+[phases.setup]
+nixPkgs = ["gcc"]
+
+[phases.install]
+commands = ["chmod +x stockfish"]
