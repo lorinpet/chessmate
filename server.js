@@ -29,7 +29,7 @@ JWT_REGISTRATION_SECRET = crypto.randomBytes(32).toString('hex');
 JWT_TOKEN_SECRET = PASSWORD;
 K_FACTOR = 32;
 
-const ip = process.env.HOST || 'localhost';;
+const ip = process.env.HOST || 'localhost';
 const activeGames = {};
 const playerToGameMap = new Map();
 
@@ -441,7 +441,9 @@ app.get('/analyse', async (req, res) => {
 });
 
 app.post('/create', (req, res) => {
+  console.log("Received request on /create");
   const { position, type, timeControl, gameMode, difficulty } = req.body;
+  console.log({ position, type, timeControl, gameMode, difficulty });
   const rawPos = position.trim().split(' ')[0];
   let modifiedPos = '';
   let x = 0;
@@ -516,15 +518,18 @@ app.post('/create', (req, res) => {
 
   const timeout = setTimeout(() => {
     res.status(400).json('1');
-  }, 2000);
+  }, 10000);
 
+  console.log("1");
   const sf = spawn('./stockfish');
 
   sf.stdin.write('uci\n');
   sf.stdin.write(`position fen ${modifiedPos} w - - 0 1\n`);
+  console.log("2");
 
   sf.stdout.on('data', (data) => {
     const msg = data.toString();
+    console.log("3");
 
     if (msg.includes('bestmove (none)')) {
       sf.stdin.write('quit\n');
@@ -543,6 +548,8 @@ app.post('/create', (req, res) => {
       clearTimeout(timeout);
       res.json(gameId);
     }
+
+    console.log("4");
   });
 
   sf.stdin.write(`go depth 2\n`);
