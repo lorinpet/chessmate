@@ -1660,6 +1660,6 @@ function generateGameId() {
   return Math.random().toString(36).substring(2, 8);
 }
 
-server.listen(() => {
+server.listen(8080, () => {
   console.log('Server is listening');
 });
