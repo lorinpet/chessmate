@@ -441,9 +441,7 @@ app.get('/analyse', async (req, res) => {
 });
 
 app.post('/create', (req, res) => {
-  console.log("Received request on /create");
   const { position, type, timeControl, gameMode, difficulty } = req.body;
-  console.log({ position, type, timeControl, gameMode, difficulty });
   const rawPos = position.trim().split(' ')[0];
   let modifiedPos = '';
   let x = 0;
@@ -516,43 +514,38 @@ app.post('/create', (req, res) => {
     return;
   }
 
-  const timeout = setTimeout(() => {
-    res.status(400).json('1');
-  }, 10000);
+  // const timeout = setTimeout(() => {
+  //   res.status(400).json('1');
+  // }, 2000);
 
-  console.log("1");
-  const sf = spawn('./stockfish');
+  // const sf = spawn('./stockfish');
 
-  sf.stdin.write('uci\n');
-  sf.stdin.write(`position fen ${modifiedPos} w - - 0 1\n`);
-  console.log("2");
+  // sf.stdin.write('uci\n');
+  // sf.stdin.write(`position fen ${modifiedPos} w - - 0 1\n`);
 
-  sf.stdout.on('data', (data) => {
-    const msg = data.toString();
-    console.log("3");
+  // sf.stdout.on('data', (data) => {
+  //   const msg = data.toString();
 
-    if (msg.includes('bestmove (none)')) {
-      sf.stdin.write('quit\n');
-      clearTimeout(timeout);
-      res.status(400).json('1');
-    } else if (msg.includes('bestmove')) {
-      sf.stdin.write('quit\n');
+  //   if (msg.includes('bestmove (none)')) {
+  //     sf.stdin.write('quit\n');
+  //     clearTimeout(timeout);
+  //     res.status(400).json('1');
+  //   } else if (msg.includes('bestmove')) {
+  //     sf.stdin.write('quit\n');
       const [minutes, increment] = timeControl.split('+').map(Number);
       const gameId = generateGameId();
       activeGames[gameId] = new ChessGame(type, minutes * 60, increment, gameMode, difficulty);
 
-      if (modifiedPos !== 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR') {
-        activeGames[gameId].setPosition(modifiedPos);
-      }
+  //     if (modifiedPos !== 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR') {
+  //       activeGames[gameId].setPosition(modifiedPos);
+  //     }
       
-      clearTimeout(timeout);
-      res.json(gameId);
-    }
+  //     clearTimeout(timeout);
+  //     res.json(gameId);
+  //   }
+  // });
 
-    console.log("4");
-  });
-
-  sf.stdin.write(`go depth 2\n`);
+  // sf.stdin.write(`go depth 2\n`);
 });
 
 app.get('/fetch', async (req, res) => {
@@ -1667,6 +1660,6 @@ function generateGameId() {
   return Math.random().toString(36).substring(2, 8);
 }
 
-server.listen(8080, () => {
+server.listen(() => {
   console.log('Server is listening');
 });
