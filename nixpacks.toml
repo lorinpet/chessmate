@@ -2,7 +2,7 @@
   builder = "nodejs_18"
 
   build_commands = [
-    "chmod +x stockfish"
+    "chmod +x ./stockfish"
   ]
 
 [start]
