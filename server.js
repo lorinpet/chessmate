@@ -546,7 +546,7 @@ app.post('/create', (req, res) => {
   //     }
       
   //     clearTimeout(timeout);
-  //     res.json(gameId);
+      res.json(gameId);
   //   }
   // });
 
