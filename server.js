@@ -20,12 +20,8 @@ const { spawn } = require('child_process');
 
 require('dotenv').config();
 
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
+app.use(cors());
+app.options('*', cors());
 app.use(bodyParser.json());
 app.use(express.json());
 
@@ -445,7 +441,7 @@ app.get('/analyse', async (req, res) => {
   sf.stdin.write(`go depth 18\n`);
 });
 
-app.post('/create', async (req, res) => {
+app.post('/create', (req, res) => {
   const { position, type, timeControl, gameMode, difficulty } = req.body;
   res.status(400).json("test");
   return;
