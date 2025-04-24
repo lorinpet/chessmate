@@ -445,7 +445,7 @@ app.get('/analyse', async (req, res) => {
   sf.stdin.write(`go depth 18\n`);
 });
 
-app.post('/create', (req, res) => {
+app.post('/create', async (req, res) => {
   const { position, type, timeControl, gameMode, difficulty } = req.body;
   res.status(400).json("test");
   return;
