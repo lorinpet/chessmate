@@ -447,6 +447,8 @@ app.get('/analyse', async (req, res) => {
 
 app.post('/create', (req, res) => {
   const { position, type, timeControl, gameMode, difficulty } = req.body;
+  res.status(400).json("test");
+  return;
   // const rawPos = position.trim().split(' ')[0];
   // let modifiedPos = '';
   // let x = 0;
