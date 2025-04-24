@@ -1,5 +1,12 @@
-[phases.setup]
-nixPkgs = ["gcc"]
+[build]
+  builder = "nodejs_18"
 
-[phases.install]
-commands = ["chmod +x stockfish"]
+  build_commands = [
+    "chmod +x stockfish"
+  ]
+
+[start]
+  command = "node server.js"
+
+[env]
+  NODE_ENV = "production"
