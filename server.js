@@ -435,10 +435,10 @@ app.get('/analyse', async (req, res) => {
 
       if (score) {
         if (score[1] === 'cp') {
-          const centipawn = parseInt(score[2], 10);
+          const centipawn = moves.length % 2 === 0 ? parseInt(score[2], 10) : -parseInt(score[2], 10);
           analysis.evaluation = (centipawn / 100).toFixed(2);
         } else if (score[1] === 'mate') {
-          const mate = parseInt(score[2], 10);
+          const mate = moves.length % 2 === 0 ? parseInt(score[2], 10) : -parseInt(score[2], 10);
           analysis.evaluation = `#${mate}`;
         }
       }
