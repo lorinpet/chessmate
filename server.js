@@ -516,6 +516,7 @@ app.post('/create', (req, res) => {
 
   const timeout = setTimeout(() => {
     res.status(400).json('1');
+    return;
   }, 2000);
 
   const sf = spawn('./stockfish');
@@ -530,6 +531,7 @@ app.post('/create', (req, res) => {
       sf.stdin.write('quit\n');
       clearTimeout(timeout);
       res.status(400).json('1');
+      return;
     } else if (msg.includes('bestmove')) {
       sf.stdin.write('quit\n');
       const [minutes, increment] = timeControl.split('+').map(Number);
@@ -542,6 +544,7 @@ app.post('/create', (req, res) => {
       
       clearTimeout(timeout);
       res.json(gameId);
+      return;
     }
   });
 
