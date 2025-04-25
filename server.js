@@ -520,7 +520,7 @@ app.post('/create', (req, res) => {
     responded = true;
     res.status(400).json('1');
     return;
-  }, 2000);
+  }, 10000);
 
   const sf = spawn('./stockfish');
 
