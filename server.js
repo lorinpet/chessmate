@@ -422,13 +422,27 @@ app.get('/archives', async (req, res) => {
 app.get('/analyse', async (req, res) => {
   const { fen, moves } = req.query;
   const sf = spawn('./stockfish');
-  let analysis;
+  let analysis = { bestmove: '', evaluation: '' };
   
   sf.stdin.write('uci\n');
   sf.stdin.write(`position fen ${fen} moves ${moves}\n`);
   
   sf.stdout.on('data', (data) => {
     const msg = data.toString();
+
+    if (msg.includes('info depth') && msg.includes('score')) {
+      const score = msg.match(/score (cp|mate) (-?\d+)/);
+
+      if (score) {
+        if (score[1] === 'cp') {
+          const centipawn = parseInt(score[2], 10);
+          analysis.evaluation = (centipawn / 100).toFixed(2);
+        } else if (score[1] === 'mate') {
+          const mate = parseInt(score[2], 10);
+          analysis.evaluation = `#${mate}`;
+        }
+      }
+    }
 
     if (msg.includes('bestmove')) {
       analysis = 'bestmove' + msg.split('bestmove')[1].split('\r\n')[0];
