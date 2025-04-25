@@ -445,7 +445,7 @@ app.get('/analyse', async (req, res) => {
     }
 
     if (msg.includes('bestmove')) {
-      analysis = 'bestmove' + msg.split('bestmove')[1].split('\r\n')[0];
+      analysis.bestmove = 'bestmove' + msg.split('bestmove')[1].split('\r\n')[0];
       sf.stdin.write('quit\n');
       res.json(analysis);
     }
