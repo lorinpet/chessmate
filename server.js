@@ -1540,7 +1540,7 @@ class ChessGame {
 
 wss.on('connection', (ws, req) => {
   console.log('New client connected');
-  const url = new URL(req.url, `http://${req.headers.host}`);
+  const url = new URL(req.url, `https://${req.headers.host}`);
   const gameId = url.searchParams.get('gameId');
   const name = url.searchParams.get('name');
   const image = url.searchParams.get('image');
