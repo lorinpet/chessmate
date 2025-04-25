@@ -448,6 +448,7 @@ app.post('/create', (req, res) => {
   let y = 0;
   let whiteKing = false;
   let blackKing = false;
+  let responded = false;
 
   for (let char of rawPos) {
     if (x < 8) {
@@ -515,6 +516,8 @@ app.post('/create', (req, res) => {
   }
 
   const timeout = setTimeout(() => {
+    if (responded) return;
+    responded = true;
     res.status(400).json('1');
     return;
   }, 2000);
@@ -525,11 +528,13 @@ app.post('/create', (req, res) => {
   sf.stdin.write(`position fen ${modifiedPos} w - - 0 1\n`);
 
   sf.stdout.on('data', (data) => {
+    if (responded) return;
     const msg = data.toString();
 
     if (msg.includes('bestmove (none)')) {
       sf.stdin.write('quit\n');
       clearTimeout(timeout);
+      responded = true;
       res.status(400).json('1');
       return;
     } else if (msg.includes('bestmove')) {
@@ -543,6 +548,7 @@ app.post('/create', (req, res) => {
       }
       
       clearTimeout(timeout);
+      responded = true;
       res.json(gameId);
       return;
     }
