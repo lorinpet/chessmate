@@ -343,6 +343,8 @@ app.get('/uploads/:filename', (req, res) => {
 
     const extname = path.extname(filename).toLowerCase();
     let contentType = (extname === '.png') ? 'image/png' : 'image/jpeg';
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', contentType);
     res.sendFile(imagePath);
   } catch (error) {
