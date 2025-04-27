@@ -489,7 +489,7 @@ app.post('/create', (req, res) => {
         }
       } else if (['1', '2', '3', '4', '5', '6', '7', '8'].includes(char)) {
         const curr = x;
-        x += char;
+        x += parseInt(char);
         modifiedPos += (x < 9 ? char : (8 - curr));
       }
     }
