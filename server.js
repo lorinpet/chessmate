@@ -650,7 +650,7 @@ class ChessGame {
     for (let y = 0; y < 8; y++) {
       for (let x = 0; x < 8; x++) {
         if (['1', '2', '3', '4', '5', '6', '7', '8'].includes(position[i])) {
-          x += position[i];
+          x += parseInt(position[i]);
           x--;
         } else if (whiteKeys.includes(position[i]) || blackKeys.includes(position[i])) {
           board[y][x] = position[i];
