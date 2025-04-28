@@ -700,7 +700,7 @@ class ChessGame {
       const msg = data.toString();
 
       if (msg.includes('bestmove')) {
-        const bestMove = msg.split('bestmove ')[1].split(' ')[0];
+        const bestMove = msg.split('bestmove ')[1].split(' ')[0].replace('\n', '');
         this.handleAIMove(bestMove);
       }
     });
