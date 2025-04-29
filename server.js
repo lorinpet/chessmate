@@ -1338,6 +1338,10 @@ class ChessGame {
         this.archiveGame();
         this.players['white'].ws.send(JSON.stringify({ type: 'gameState', gameState: this.gameState }));
         this.players['black'].ws.send(JSON.stringify({ type: 'gameState', gameState: this.gameState }));
+      } else if (this.whiteDrawOffer) {
+        this.players['black'].ws.send(JSON.stringify({ type: 'draw' }));
+      } else if (this.blackDrawOffer) {
+        this.players['white'].ws.send(JSON.stringify({ type: 'draw' }));
       }
     } else if (data.type === 'resign') {
       if (this.state !== 1) {
